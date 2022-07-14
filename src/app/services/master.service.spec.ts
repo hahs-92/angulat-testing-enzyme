@@ -25,7 +25,7 @@ fdescribe('MasterService', () => {
   // este prueba normalmente no se usa, se utiliza mocks
   it('should return "myValue " from the real service', () => {
     const valueService = new ValueService();
-    service = new MasterService(new ValueService());
+    service = new MasterService(valueService);
     expect(service.getValue()).toBe('myValue');
   });
 
@@ -38,10 +38,16 @@ fdescribe('MasterService', () => {
   });
 
   //mejor opcion
-  it('should return "fake value" from the fake service with object', () => {
+  it('should call to getValue from valueService', () => {
     // con fake
-    const valueService = { getValue: () => 'fake value' };
-    service = new MasterService(valueService as ValueService);
-    expect(service.getValue()).toBe('fake value');
+    const valueServiceSpy = jasmine.createSpyObj<ValueService>('ValueService', [
+      'getValue',
+    ]);
+    valueServiceSpy.getValue.and.returnValue('fake value');
+    service = new MasterService(valueServiceSpy);
+
+    expect(service.getValue()).toBe('fake value'); // en este caso no importa lo que retorna
+    expect(valueServiceSpy.getValue).toHaveBeenCalled();
+    expect(valueServiceSpy.getValue).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,13 +1,19 @@
-// import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { ValueService } from './value.service';
 
 describe('ValueService', () => {
   let service: ValueService;
+
   beforeEach(() => {
-    service = new ValueService();
-    // TestBed.configureTestingModule({});
-    // service = TestBed.inject(ValueService);
+    TestBed.configureTestingModule({
+      //agregamos provider
+      providers: [ValueService],
+    });
+    service = TestBed.inject(ValueService);
+
+    //sin ayuda de angular
+    // service = new ValueService();
   });
 
   it('should be create', () => {
