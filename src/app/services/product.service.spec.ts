@@ -101,5 +101,63 @@ fdescribe('test for ProductService', () => {
       req.flush(mockData);
       httpController.verify();
     });
+
+    it('should return list with taxes when price is less to o', (doneFn) => {
+      //arrange
+      const mockData: Product[] = [
+        {
+          ...generateOneProduct(),
+          price: 100,
+        },
+        {
+          ...generateOneProduct(),
+          price: 0,
+        },
+        {
+          ...generateOneProduct(),
+          price: -1,
+        },
+      ];
+      //act
+      service.getProducts().subscribe((data) => {
+        //assert
+        expect(data[0].taxes).toEqual(19);
+        expect(data[1].taxes).toEqual(0);
+        expect(data[2].taxes).toEqual(0);
+        doneFn();
+      });
+
+      // http config
+      const req = httpController.expectOne(
+        `${environment.API_URL}/api/v1/products`
+      );
+      req.flush(mockData);
+      httpController.verify();
+    });
+
+    it('should send query params with limit 10 and offset 3', (doneFn) => {
+      //arrange
+      const mockData: Product[] = generateManyProducts();
+      const limit = 10;
+      const offset = 3;
+      //act
+      service.getProducts(limit, offset).subscribe((data) => {
+        //assert
+        // expect(data).toEqual(mockData); // hace un analisis profundo
+        expect(data.length).toEqual(mockData.length);
+        doneFn();
+      });
+
+      // http config
+      const req = httpController.expectOne(
+        `${environment.API_URL}/api/v1/products?limit=${limit}&offset=${offset}`
+      );
+      req.flush(mockData);
+      const params = req.request.params;
+
+      expect(params.get('limit')).toEqual(`${limit}`);
+      expect(params.get('offset')).toEqual(`${offset}`);
+      httpController.verify();
+    });
   });
 });
