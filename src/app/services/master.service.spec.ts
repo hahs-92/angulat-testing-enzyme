@@ -57,6 +57,7 @@ fdescribe('MasterService', () => {
 
   //mejor opcion
   //sin l ayuda de angular
+  /*
   it('should call to getValue from valueService', () => {
     // con fake
     const valueServiceSpy = jasmine.createSpyObj<ValueService>('ValueService', [
@@ -69,6 +70,7 @@ fdescribe('MasterService', () => {
     expect(valueServiceSpy.getValue).toHaveBeenCalled();
     expect(valueServiceSpy.getValue).toHaveBeenCalledTimes(1);
   });
+  */
 
   // conla ayuda de angular
   it('should call to getValue from valueService', () => {
