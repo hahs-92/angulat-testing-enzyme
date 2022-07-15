@@ -75,6 +75,7 @@ export class ProductsService {
   }
 
   delete(id: string) {
+    // return this.http.delete<{ rta: boolean }>(`${this.API_URL}/products/${id}`);
     return this.http.delete<boolean>(`${this.API_URL}/products/${id}`);
   }
 

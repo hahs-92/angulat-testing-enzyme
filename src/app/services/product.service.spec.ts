@@ -6,7 +6,11 @@ import {
 } from '@angular/common/http/testing';
 import { ProductsService } from './product.service';
 //models
-import { CreateProductDTO, Product } from '../models/product.models';
+import {
+  CreateProductDTO,
+  Product,
+  UpdateProductDTO,
+} from '../models/product.models';
 import { environment } from '../../environments/environment';
 //mocks
 import {
@@ -192,6 +196,56 @@ fdescribe('test for ProductService', () => {
       expect(req.request.method).toEqual('POST');
 
       // httpController.verify();
+    });
+  });
+
+  describe('test for update product', () => {
+    it('should return a new Product updated', (doneFn) => {
+      //arrange
+      const dto: UpdateProductDTO = {
+        title: 'title update',
+      };
+      const mockData: Product = generateOneProduct();
+      const productid = '1';
+      //act
+      service.update(productid, { ...dto }).subscribe((data) => {
+        //assert
+        expect(data).toEqual(mockData);
+        doneFn();
+      });
+
+      // http config
+      const req = httpController.expectOne(
+        `${environment.API_URL}/api/v1/products/${productid}`
+      );
+      req.flush(mockData);
+
+      expect(req.request.body).toEqual(dto);
+      expect(req.request.method).toEqual('PUT');
+    });
+  });
+  describe('test for delete product', () => {
+    it('should return a status code 200', (doneFn) => {
+      //arrange
+      const dto: UpdateProductDTO = {
+        title: 'title update',
+      };
+      const mockData = true;
+      const productid = '1';
+      //act
+      service.delete(productid).subscribe((data) => {
+        //assert
+        expect(data).toEqual(mockData);
+        doneFn();
+      });
+
+      // http config
+      const req = httpController.expectOne(
+        `${environment.API_URL}/api/v1/products/${productid}`
+      );
+      req.flush(mockData);
+
+      expect(req.request.method).toEqual('DELETE');
     });
   });
 });
