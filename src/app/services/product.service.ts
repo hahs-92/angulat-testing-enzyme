@@ -25,7 +25,7 @@ export class ProductsService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(limit?: number, offset?: number) {
+  getProducts(limit?: number, offset?: number): Observable<Product[]> {
     let params = new HttpParams();
 
     if (limit !== undefined && offset !== undefined) {
@@ -50,7 +50,7 @@ export class ProductsService {
       ); // tambien tiene retryWhen
   }
 
-  getProduct(id: string) {
+  getProduct(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.API_URL}/products/${id}`).pipe(
       catchError((err: HttpErrorResponse) => {
         if (err.status === HttpStatusCode.InternalServerError) {

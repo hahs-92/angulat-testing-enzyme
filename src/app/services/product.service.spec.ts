@@ -9,7 +9,10 @@ import { ProductsService } from './product.service';
 import { Product } from '../models/product.models';
 import { environment } from '../../environments/environment';
 //mocks
-import { generateManyProducts } from '../models/product.mock';
+import {
+  generateManyProducts,
+  generateOneProduct,
+} from '../models/product.mock';
 
 fdescribe('test for ProductService', () => {
   let service: ProductsService;
@@ -39,6 +42,55 @@ fdescribe('test for ProductService', () => {
       service.getAllSimple().subscribe((data) => {
         //assert
         expect(data).toEqual(mockData);
+        doneFn();
+      });
+
+      // http config
+      const req = httpController.expectOne(
+        `${environment.API_URL}/api/v1/products`
+      );
+      req.flush(mockData);
+      httpController.verify();
+    });
+  });
+
+  describe('tests for getProducts', () => {
+    it('should return a product list', (doneFn) => {
+      //arrange
+      const mockData: Product[] = generateManyProducts();
+      //act
+      service.getProducts().subscribe((data) => {
+        //assert
+        // expect(data).toEqual(mockData); // hace un analisis profundo
+        expect(data.length).toEqual(mockData.length);
+        doneFn();
+      });
+
+      // http config
+      const req = httpController.expectOne(
+        `${environment.API_URL}/api/v1/products`
+      );
+      req.flush(mockData);
+      httpController.verify();
+    });
+
+    it('should return list with taxes', (doneFn) => {
+      //arrange
+      const mockData: Product[] = [
+        {
+          ...generateOneProduct(),
+          price: 100,
+        },
+        {
+          ...generateOneProduct(),
+          price: 120,
+        },
+      ];
+      //act
+      service.getProducts().subscribe((data) => {
+        //assert
+        expect(data.length).toEqual(mockData.length);
+        expect(data[0].taxes).toEqual(19);
         doneFn();
       });
 

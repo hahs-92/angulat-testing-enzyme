@@ -16,6 +16,6 @@ export const generateOneProduct = (): Product => {
   };
 };
 
-export const generateManyProducts = (size = 10): Product[] => {
+export const generateManyProducts = (size = 10) => {
   return Array.from({ length: size }, () => generateOneProduct());
 };
