@@ -6,7 +6,7 @@ import {
   HttpStatusCode,
 } from '@angular/common/http';
 import { retry, catchError, map, switchMap } from 'rxjs/operators';
-import { throwError, zip } from 'rxjs';
+import { Observable, throwError, zip } from 'rxjs';
 //models
 import { Product } from '../models/product.models';
 import { CreateProductDTO } from '../models/product.models';

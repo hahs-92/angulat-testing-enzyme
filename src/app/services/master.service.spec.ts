@@ -6,7 +6,7 @@ import { ValueService } from './value.service';
 //mocks
 import { FakeValueService } from './value-fake.service';
 
-fdescribe('MasterService', () => {
+describe('MasterService', () => {
   let service: MasterService;
   let valueServiceSpy: jasmine.SpyObj<ValueService>;
 
