@@ -23,7 +23,7 @@ import {
 } from '../models/product.mock';
 import { HttpStatusCode, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-fdescribe('test for ProductService', () => {
+describe('test for ProductService', () => {
   let service: ProductsService;
   let httpController: HttpTestingController;
   let tokenService: TokenService;
