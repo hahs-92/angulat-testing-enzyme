@@ -5,6 +5,10 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { ProductsService } from './product.service';
+//services
+import { TokenService } from './token.service';
+//interceptors
+import { TokenInterceptor } from '../interceptors/token.interceptor';
 //models
 import {
   CreateProductDTO,
@@ -17,22 +21,32 @@ import {
   generateManyProducts,
   generateOneProduct,
 } from '../models/product.mock';
-import { HttpStatusCode } from '@angular/common/http';
+import { HttpStatusCode, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 fdescribe('test for ProductService', () => {
   let service: ProductsService;
   let httpController: HttpTestingController;
+  let tokenService: TokenService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       //agregamos el contexo
       imports: [HttpClientTestingModule],
       //injectamos el modulo
-      providers: [ProductsService],
+      providers: [
+        ProductsService,
+        TokenService, // le podriamos pasar un spy
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: TokenInterceptor,
+          multi: true,
+        },
+      ],
     });
 
     service = TestBed.inject(ProductsService);
     httpController = TestBed.inject(HttpTestingController);
+    tokenService = TestBed.inject(TokenService);
   });
 
   afterEach(() => {
@@ -47,6 +61,7 @@ fdescribe('test for ProductService', () => {
     it('should return a product list', (doneFn) => {
       //arrange
       const mockData: Product[] = generateManyProducts();
+      spyOn(tokenService, 'getToken').and.returnValue('123'); //espiamos una parte del servicio
       //act
       service.getAllSimple().subscribe((data) => {
         //assert
@@ -58,6 +73,8 @@ fdescribe('test for ProductService', () => {
       const req = httpController.expectOne(
         `${environment.API_URL}/api/v1/products`
       );
+      const headers = req.request.headers;
+      expect(headers.get('Authorization')).toEqual('Bearer 123');
       req.flush(mockData);
       // httpController.verify();
     });
