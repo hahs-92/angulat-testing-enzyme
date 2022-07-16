@@ -1,6 +1,6 @@
 import { Person } from './person.model';
 
-fdescribe('Test for Person', () => {
+describe('Test for Person', () => {
   let person: Person;
   beforeEach(() => {
     person = new Person('Jess', 'Jhonson', 28, 54, 1.65);
@@ -49,6 +49,33 @@ fdescribe('Test for Person', () => {
       const rta = person.calcIMC();
 
       expect(rta).toEqual('overweight level 1');
+    });
+
+    it('should return a string: overweight level 2', () => {
+      person.weight = 70;
+      person.height = 1.54;
+
+      const rta = person.calcIMC();
+
+      expect(rta).toEqual('overweight level 2');
+    });
+
+    it('should return a string: overweight level 3', () => {
+      person.weight = 100;
+      person.height = 1.54;
+
+      const rta = person.calcIMC();
+
+      expect(rta).toEqual('overweight level 3');
+    });
+
+    it('should return a string: not found', () => {
+      person.weight = -85;
+      person.height = 1.54;
+
+      const rta = person.calcIMC();
+
+      expect(rta).toEqual('not found');
     });
   });
 });
