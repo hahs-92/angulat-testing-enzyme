@@ -28,7 +28,7 @@ fdescribe('PersonComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // ____cuando los valores son estaticos
+  // ____cuando los valores son estaticos(que no son recibidos por @Input)
   /*
   it('should have <h3> with "people"', () => {
     const personDebug: DebugElement = fixture.debugElement; //agnostico a la plataforma
@@ -84,5 +84,33 @@ fdescribe('PersonComponent', () => {
     //arrange
     expect(pElement?.textContent).toEqual(text);
     expect(pElement?.textContent).toContain(text); // de esta manera solo evaluamos en valor de person
+  });
+
+  it('should display text with IMC when call calcIMC', () => {
+    //arrange
+    component.person = new Person('Alex', 'Hernandez', 28, 57, 1.66);
+    const personDebug: DebugElement = fixture.debugElement;
+    const btnDebug: DebugElement = personDebug.query(By.css('button.btn-imc')); //con clase
+    const btnElement: HTMLElement = btnDebug.nativeElement;
+    const text = 'normal';
+    //act
+    component.calcIMC(); //ejecutamos directamente el metodo
+    fixture.detectChanges();
+    //arrange
+    expect(btnElement?.textContent).toContain(text);
+  });
+
+  it('should display text with IMC when do click', () => {
+    //arrange
+    component.person = new Person('Alex', 'Hernandez', 28, 57, 1.66);
+    const personDebug: DebugElement = fixture.debugElement;
+    const btnDebug: DebugElement = personDebug.query(By.css('button.btn-imc')); //con clase
+    const btnElement: HTMLElement = btnDebug.nativeElement;
+    const text = 'normal';
+    //act
+    btnDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    //arrange
+    expect(btnElement?.textContent).toContain(text);
   });
 });
