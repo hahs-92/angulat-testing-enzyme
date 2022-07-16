@@ -88,7 +88,7 @@ fdescribe('PersonComponent', () => {
 
   it('should display text with IMC when call calcIMC', () => {
     //arrange
-    component.person = new Person('Alex', 'Hernandez', 28, 57, 1.66);
+    // component.person = new Person('Alex', 'Hernandez', 28, 57, 1.66);
     const personDebug: DebugElement = fixture.debugElement;
     const btnDebug: DebugElement = personDebug.query(By.css('button.btn-imc')); //con clase
     const btnElement: HTMLElement = btnDebug.nativeElement;
@@ -102,7 +102,7 @@ fdescribe('PersonComponent', () => {
 
   it('should display text with IMC when do click', () => {
     //arrange
-    component.person = new Person('Alex', 'Hernandez', 28, 57, 1.66);
+    // component.person = new Person('Alex', 'Hernandez', 28, 57, 1.66);
     const personDebug: DebugElement = fixture.debugElement;
     const btnDebug: DebugElement = personDebug.query(By.css('button.btn-imc')); //con clase
     const btnElement: HTMLElement = btnDebug.nativeElement;
@@ -112,5 +112,26 @@ fdescribe('PersonComponent', () => {
     fixture.detectChanges();
     //arrange
     expect(btnElement?.textContent).toContain(text);
+  });
+
+  //test for @ouput from child
+  it('should raise selected event emitter when do click', () => {
+    //arrange
+    const expectPerson = new Person('Alex', 'Hernandez', 28, 57, 1.66);
+    component.person = expectPerson;
+    const btnDebug: DebugElement = fixture.debugElement.query(
+      By.css('button.btn-choose')
+    ); //con clase
+
+    let personSelected: Person | undefined;
+    component.onSelected.subscribe((person) => {
+      personSelected = person;
+    });
+
+    //act
+    btnDebug.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    //arrange
+    expect(personSelected).toEqual(expectPerson);
   });
 });
