@@ -12,6 +12,7 @@ import { ProductsComponent } from './components/products/products.component';
 import { PicoPreviewComponent } from './components/pico-preview/pico-preview.component';
 import { PersonComponent } from './components/person/person.component';
 import { PeopleComponent } from './components/people/people.component';
+import { ProductComponent } from './components/product/product.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PeopleComponent } from './components/people/people.component';
     PicoPreviewComponent,
     PersonComponent,
     PeopleComponent,
+    ProductComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,7 +7,7 @@ import { PersonComponent } from '../person/person.component';
 import { Person } from 'src/app/models/person.model';
 import { findIndex } from 'rxjs';
 
-fdescribe('PeopleComponent', () => {
+describe('PeopleComponent', () => {
   let component: PeopleComponent;
   let fixture: ComponentFixture<PeopleComponent>;
 
