@@ -8,9 +8,19 @@ import { Person } from 'src/app/models/person.model';
   styleUrls: ['./people.component.scss'],
 })
 export class PeopleComponent implements OnInit {
-  person: Person = new Person('Jess', 'Jhonson', 28, 54, 1.54);
+  people: Person[] = [
+    new Person('Jess', 'Jhonson', 28, 54, 1.54),
+    new Person('Alex', 'Hernandez', 28, 57, 1.66),
+  ];
+
+  selectedPerson: Person | null = null;
+  test = { name: 'alex' };
 
   constructor() {}
 
   ngOnInit(): void {}
+
+  choose(person: Person) {
+    this.selectedPerson = person;
+  }
 }
