@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 //modules extra
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 //interceptors
 import { TokenInterceptor } from './interceptors/token.interceptor';
 
@@ -13,6 +13,8 @@ import { PicoPreviewComponent } from './components/pico-preview/pico-preview.com
 import { PersonComponent } from './components/person/person.component';
 import { PeopleComponent } from './components/people/people.component';
 import { ProductComponent } from './components/product/product.component';
+import { OthersComponent } from './components/others/others.component';
+import { HighligthDirective } from './directives/highligth.directive';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,16 @@ import { ProductComponent } from './components/product/product.component';
     PersonComponent,
     PeopleComponent,
     ProductComponent,
+    OthersComponent,
+    HighligthDirective,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    //activar NgModel
+    FormsModule,
   ],
   providers: [
     {

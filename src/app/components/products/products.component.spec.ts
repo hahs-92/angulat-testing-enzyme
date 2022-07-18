@@ -15,7 +15,7 @@ import { ValueService } from 'src/app/services/value.service';
 import { generateManyProducts } from '../../models/product.mock';
 import { By } from '@angular/platform-browser';
 
-fdescribe('ProductsComponent', () => {
+describe('ProductsComponent', () => {
   let component: ProductsComponent;
   let fixture: ComponentFixture<ProductsComponent>;
   //simulamos el servicio
