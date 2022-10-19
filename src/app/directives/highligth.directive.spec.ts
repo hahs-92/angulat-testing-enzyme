@@ -6,6 +6,8 @@ import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 //directive
 import { HighligthDirective } from './highligth.directive';
+//testing finders
+import { queryAllByDirective, queryAll } from '../../testing';
 
 //host
 @Component({
@@ -46,9 +48,10 @@ describe('HighligthDirective', () => {
 
   describe('Test for Highligth Directive', () => {
     it('should have three highligth elements', () => {
-      const elements = fixture.debugElement.queryAll(
-        By.directive(HighligthDirective)
-      );
+      // const elements = fixture.debugElement.queryAll(
+      //   By.directive(HighligthDirective)
+      // );
+      const elements = queryAllByDirective(fixture, HighligthDirective);
       // const elementsWithoutDirective = fixture.debugElement.queryAll(
       //   By.css('*:not([appHighligth])')
       // );

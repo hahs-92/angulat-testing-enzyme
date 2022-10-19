@@ -15,8 +15,13 @@ import { ValueService } from 'src/app/services/value.service';
 //mocks
 import { generateManyProducts } from '../../../models/product.mock';
 //testing helpers
-import { asyncData } from '../../../../testing';
-import { asyncError, mockObservable } from '../../../../testing/async-data';
+import {
+  asyncData,
+  asyncError,
+  mockObservable,
+  query,
+  queryById,
+} from '../../../../testing';
 
 describe('ProductsComponent', () => {
   let component: ProductsComponent;
@@ -172,12 +177,22 @@ describe('ProductsComponent', () => {
       //arrange
       const mockMsg = 'my message';
       valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMsg));
-      const btnDebug = fixture.debugElement.query(By.css('.btn-promise'));
+
+      //por clase
+      //const btnDebug = fixture.debugElement.query(By.css('.btn-promise'));
+      // por testId
+      // const btnDebug = fixture.debugElement.query(
+      //   By.css('[data-testid="btn-promise"]')
+      // );
+      // const btnDebug = query(fixture, '[data-testid]="btn-promise"');
+      const btnDebug = queryById(fixture, 'btn-promise');
+
       //act
       btnDebug.triggerEventHandler('click', null);
       tick(); //resolvemos la promesa
       fixture.detectChanges();
       const pDebug = fixture.debugElement.query(By.css('p.rta'));
+
       //assert
       expect(component.rta).toEqual(mockMsg);
       expect(valueService.getPromiseValue).toHaveBeenCalled();

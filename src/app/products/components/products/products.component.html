@@ -1,7 +1,9 @@
 <section class="container">
   <h1>Products</h1>
   <h3>Rta</h3>
-  <button class="btn-promise" (click)="callPromise()">Call Promise</button>
+  <button data-testid="btn-promise" class="btn-promise" (click)="callPromise()">
+    Call Promise
+  </button>
   <p class="rta">{{ rta }}</p>
   <div class="my-grid">
     <app-product
