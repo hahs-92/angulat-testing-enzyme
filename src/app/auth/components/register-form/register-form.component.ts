@@ -36,29 +36,26 @@ export class RegisterFormComponent {
   );
   status: 'loading' | 'success' | 'error' | 'init' = 'init';
 
-  constructor(
-    private fb: FormBuilder,
-    private usersService: UsersService,
-    private router: Router
-  ) {}
+  constructor(private fb: FormBuilder, private usersService: UsersService) {}
 
   register(event: Event) {
     event.preventDefault();
     if (this.form.valid) {
       this.status = 'loading';
       // const value = this.form.value;
-      const value: CreateUserDTO = {
+      const value = {
         name: this.form.value.name!,
         email: this.form.value.email!,
         password: this.form.value.password!,
-        role: 'customer',
+        avatar:
+          'https://gravatar.com/avatar/e5e7a5a454fb116f89156a9f4916862a?s=400&d=robohash&r=x',
       };
-      this.usersService.create(value).subscribe({
+      this.usersService.create(value as CreateUserDTO).subscribe({
         next: (rta) => {
           // redirect
           // alert
           this.status = 'success';
-          this.router.navigateByUrl('/login');
+          //this.router.navigateByUrl('/login');
         },
         error: (error) => {
           // redict
