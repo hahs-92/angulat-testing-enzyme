@@ -5,15 +5,18 @@ import {
   tick,
 } from '@angular/core/testing';
 import { of, defer } from 'rxjs';
+import { By } from '@angular/platform-browser';
 import { ProductsComponent } from './products.component';
 //components children
 import { ProductComponent } from '../product/product.component';
 //servicios
-import { ProductsService } from '../../services/product.service';
+import { ProductsService } from '../../../services/product.service';
 import { ValueService } from 'src/app/services/value.service';
 //mocks
-import { generateManyProducts } from '../../models/product.mock';
-import { By } from '@angular/platform-browser';
+import { generateManyProducts } from '../../../models/product.mock';
+//testing helpers
+import { asyncData } from '../../../../testing';
+import { asyncError, mockObservable } from '../../../../testing/async-data';
 
 describe('ProductsComponent', () => {
   let component: ProductsComponent;
@@ -56,7 +59,10 @@ describe('ProductsComponent', () => {
     valueService = TestBed.inject(ValueService) as jasmine.SpyObj<ValueService>;
     //hacemos el mock
     const productsMock = generateManyProducts(3);
-    productService.getProducts.and.returnValue(of(productsMock));
+    productService.getProducts.and.returnValue(
+      // of(productsMock)
+      mockObservable(productsMock)
+    );
     //necesitamos el mock antes que se ejecute este metodo
     fixture.detectChanges(); // aqui ya se ejecuta el ngOnit
   });
@@ -74,7 +80,10 @@ describe('ProductsComponent', () => {
       //arrange
       const countPrev = component.products.length;
       const productsMock = generateManyProducts(10);
-      productService.getProducts.and.returnValue(of(productsMock));
+      productService.getProducts.and.returnValue(
+        // of(productsMock)
+        mockObservable(productsMock)
+      );
       //act
       component.getAll();
       fixture.detectChanges();
@@ -90,7 +99,10 @@ describe('ProductsComponent', () => {
       const countPrev = component.products.length;
       const productsMock = generateManyProducts(10);
       const btnDebug = fixture.debugElement.query(By.css('.loadMore'));
-      productService.getProducts.and.returnValue(of(productsMock));
+      productService.getProducts.and.returnValue(
+        // of(productsMock)
+        mockObservable(productsMock)
+      );
       //act
       btnDebug.triggerEventHandler('click', null);
       // component.getAll();
@@ -111,7 +123,8 @@ describe('ProductsComponent', () => {
       //vamos a retornar algo especifico y que lo resuleva en momento dado
       //con defer puede controlar un tiempo d eespera
       productService.getProducts.and.returnValue(
-        defer(() => Promise.resolve(productsMock))
+        // defer(() => Promise.resolve(productsMock))
+        asyncData(productsMock)
       );
       //act
       btnDebug.triggerEventHandler('click', null);
@@ -127,7 +140,8 @@ describe('ProductsComponent', () => {
     it('should change the status "loading" to "error"', fakeAsync(() => {
       //arrange
       productService.getProducts.and.returnValue(
-        defer(() => Promise.reject('error'))
+        // defer(() => Promise.reject('error'))
+        asyncError('error')
       );
       //act
       component.getAll();
