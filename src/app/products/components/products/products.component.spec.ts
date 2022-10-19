@@ -21,6 +21,7 @@ import {
   mockObservable,
   query,
   queryById,
+  getText,
 } from '../../../../testing';
 
 describe('ProductsComponent', () => {
@@ -191,12 +192,15 @@ describe('ProductsComponent', () => {
       btnDebug.triggerEventHandler('click', null);
       tick(); //resolvemos la promesa
       fixture.detectChanges();
-      const pDebug = fixture.debugElement.query(By.css('p.rta'));
+      //const pDebug = fixture.debugElement.query(By.css('p.rta'));
+      //por testId
+      const textRta = getText(fixture, 'rta');
 
       //assert
       expect(component.rta).toEqual(mockMsg);
       expect(valueService.getPromiseValue).toHaveBeenCalled();
-      expect(pDebug.nativeElement.textContent).toEqual(mockMsg);
+      //expect(pDebug.nativeElement.textContent).toEqual(mockMsg);
+      expect(textRta).toEqual(mockMsg);
     }));
   });
 });

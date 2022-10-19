@@ -1,5 +1,9 @@
 <h3>Hola {{ person?.name }}</h3>
 <p>Mi altura es {{ person?.height }}</p>
 
-<button (click)="calcIMC()" class="btn-imc">IMC: {{ imc }}</button>
-<button (click)="onClick()" class="btn-choose">Choose</button>
+<button data-testid="btn-imc" (click)="calcIMC()" class="btn-imc">
+  IMC: {{ imc }}
+</button>
+<button data-testid="btn-choose" (click)="onClick()" class="btn-choose">
+  Choose
+</button>

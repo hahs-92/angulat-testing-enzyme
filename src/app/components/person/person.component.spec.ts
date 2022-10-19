@@ -6,6 +6,8 @@ import { By } from '@angular/platform-browser';
 import { PersonComponent } from './person.component';
 //model
 import { Person } from 'src/app/models/person.model';
+//testing helpers
+import { clickEvent, queryById } from '../../../testing';
 
 describe('PersonComponent', () => {
   let component: PersonComponent;
@@ -110,7 +112,8 @@ describe('PersonComponent', () => {
     const btnElement: HTMLElement = btnDebug.nativeElement;
     const text = 'normal';
     //act
-    btnDebug.triggerEventHandler('click', null);
+    // btnDebug.triggerEventHandler('click', null);
+    clickEvent(fixture, 'btn-imc', true);
     fixture.detectChanges();
     //arrange
     expect(btnElement?.textContent).toContain(text);

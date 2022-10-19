@@ -1,9 +1,13 @@
-import { Type } from '@angular/core';
+import { DebugElement, Type } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 export function query<T>(fixture: ComponentFixture<T>, selector: string) {
-  return fixture.debugElement.query(By.css('[data-testid ="btn-promise"]'));
+  const debugElement = fixture.debugElement.query(By.css(selector));
+  if (!debugElement) {
+    throw new Error(`query: Element ${selector} not Found`);
+  }
+  return debugElement;
 }
 
 //para buscar por testId
@@ -21,4 +25,11 @@ export function queryAllByDirective<T, D>(
   directive: Type<D>
 ) {
   return fixture.debugElement.queryAll(By.directive(directive));
+}
+
+export function getText<T>(fixture: ComponentFixture<T>, testId: string) {
+  const debugElement: DebugElement = queryById(fixture, testId);
+  const element: HTMLElement = debugElement.nativeElement;
+
+  return element.textContent;
 }
