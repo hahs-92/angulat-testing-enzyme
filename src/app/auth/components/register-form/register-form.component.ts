@@ -17,7 +17,7 @@ export class RegisterFormComponent {
       email: [
         '',
         [Validators.required, Validators.email],
-        [MyValidators.validateEmailAsync(this.usersService)],
+        // [MyValidators.validateEmailAsync(this.usersService)],
       ],
       password: [
         '',

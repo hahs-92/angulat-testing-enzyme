@@ -1,9 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 
 import { RegisterFormComponent } from './register-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UsersService } from '../../../services/user.service';
 import { query, queryById, getText, setInputValue } from '../../../../testing';
+import { mockObservable, asyncData } from '../../../../testing/async-data';
 
 fdescribe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
@@ -27,6 +33,10 @@ fdescribe('RegisterFormComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterFormComponent);
+    //nuestro servicio
+    userServiceSpy = TestBed.inject(
+      UsersService
+    ) as jasmine.SpyObj<UsersService>;
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -122,4 +132,61 @@ fdescribe('RegisterFormComponent', () => {
       .withContext("*It's not a email valid")
       .toContain("*It's not a email");
   });
+
+  it('should send the form successfully', () => {
+    const userMock = {
+      name: 'Alex',
+      email: 'test@email.com',
+      password: '123456',
+      confirmPassword: '123456',
+      checkTerms: true,
+    };
+
+    component.form.patchValue(userMock);
+
+    //si todo sale bien el servicio nos retorna un user
+    //vamos a mirar que el servicio create, si se alla ejecutado
+    userServiceSpy.create.and.returnValue(
+      mockObservable({ ...userMock, id: '1', role: 'customer' })
+    );
+
+    //act
+    //llamamos el evento register del componente
+    component.register(new Event('submit'));
+
+    expect(component.form.valid).toBeTruthy;
+    expect(userServiceSpy.create).toHaveBeenCalled();
+  });
+
+  //esta envueñlta en fakeasync
+  it('should send the form successfully and loading => success', fakeAsync(() => {
+    const userMock = {
+      name: 'Alex',
+      email: 'test@email.com',
+      password: '123456',
+      confirmPassword: '123456',
+      checkTerms: true,
+    };
+
+    component.form.patchValue(userMock);
+
+    //si todo sale bien el servicio nos retorna un user
+    //vamos a mirar que el servicio create, si se alla ejecutado
+    userServiceSpy.create.and.returnValue(
+      asyncData({ ...userMock, id: '1', role: 'customer' })
+    );
+
+    //act
+    //llamamos el evento register del componente
+    component.register(new Event('submit'));
+    expect(component.status).toEqual('loading');
+
+    //ejecuta tareas pendientes async
+    tick();
+    fixture.detectChanges();
+    expect(component.status).toEqual('success');
+
+    expect(component.form.valid).toBeTruthy;
+    expect(userServiceSpy.create).toHaveBeenCalled();
+  }));
 });
