@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterFormComponent } from './register-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UsersService } from '../../../services/user.service';
+import { query, queryById, getText, setInputValue } from '../../../../testing';
 
 fdescribe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
@@ -34,6 +35,7 @@ fdescribe('RegisterFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  //pruebas a la logica
   it('should the emailFiled be invalid', () => {
     //component.form.get('email')?.setValue('esto no es un correo');
     //hago uso de los getters
@@ -80,5 +82,44 @@ fdescribe('RegisterFormComponent', () => {
     component.form.patchValue(userMock);
 
     expect(component.form.invalid).toBeTruthy;
+  });
+
+  //pruebas para la UI
+  it('should the emailField be invalid from UI', () => {
+    const inputDebug = query(fixture, 'input#email');
+    const inputEl: HTMLInputElement = inputDebug.nativeElement;
+
+    inputEl.value = 'esto no es un correo valido';
+    //emitimos el evento de input
+    inputEl.dispatchEvent(new Event('input'));
+    //para que el input ya no este enfocado y pueda aparecer el mensage de error
+    inputEl.dispatchEvent(new Event('blur'));
+    //emitimos la deteccion de cambios
+    fixture.detectChanges();
+
+    expect(component.emailField?.invalid)
+      .withContext('wrong email')
+      .toBeTruthy();
+
+    const textError = getText(fixture, 'emailField-email');
+    expect(textError)
+      .withContext("*It's not a email valid")
+      .toContain("*It's not a email");
+  });
+
+  //igual a la prueba anterior, pero con ayuda del helper que creamos
+  it('should the emailField be invalid from UI, helpers', () => {
+    setInputValue(fixture, 'input#email', 'esto no es un correo valido');
+    //emitimos la deteccion de cambios
+    fixture.detectChanges();
+
+    expect(component.emailField?.invalid)
+      .withContext('wrong email')
+      .toBeTruthy();
+
+    const textError = getText(fixture, 'emailField-email');
+    expect(textError)
+      .withContext("*It's not a email valid")
+      .toContain("*It's not a email");
   });
 });
