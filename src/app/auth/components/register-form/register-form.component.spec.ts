@@ -18,6 +18,7 @@ import {
   setCheckboxValue,
   clickEvent,
   clickElement,
+  asyncError,
 } from '../../../../testing';
 
 fdescribe('RegisterFormComponent', () => {
@@ -199,7 +200,7 @@ fdescribe('RegisterFormComponent', () => {
     expect(userServiceSpy.create).toHaveBeenCalled();
   }));
 
-  fit('should send the form successfully UI', fakeAsync(() => {
+  it('should send the form successfully UI', fakeAsync(() => {
     const userMock = {
       name: 'Alex',
       email: 'test@email.com',
@@ -208,7 +209,6 @@ fdescribe('RegisterFormComponent', () => {
       checkTerms: true,
     };
 
-    component.form.patchValue(userMock);
     //llenamos los campos del form
     setInputValue(fixture, 'input#name', 'Alex');
     setInputValue(fixture, 'input#email', 'test@email.com');
@@ -241,6 +241,45 @@ fdescribe('RegisterFormComponent', () => {
     tick();
     fixture.detectChanges();
     expect(component.status).toEqual('success');
+
+    expect(component.form.valid).toBeTruthy;
+    expect(userServiceSpy.create).toHaveBeenCalled();
+  }));
+
+  fit('should send the form UI, but with error in the server', fakeAsync(() => {
+    const userMock = {
+      name: 'Alex',
+      email: 'test@email.com',
+      password: '123456',
+      confirmPassword: '123456',
+      checkTerms: true,
+    };
+
+    //llenamos los campos del form
+    setInputValue(fixture, 'input#name', 'Alex');
+    setInputValue(fixture, 'input#email', 'test@email.com');
+    setInputValue(fixture, 'input#password', '123456');
+    setInputValue(fixture, 'input#confirmPassword', '123456');
+    setCheckboxValue(fixture, 'input#terms', true);
+
+    //miramos que el formulario si se lleno correctamente
+    //console.log(component.form.value);
+
+    //va arrojar un error
+    userServiceSpy.create.and.returnValue(asyncError(userMock));
+
+    //en este caso como el button no tiene un evento (click)
+    //entonces lansamos el evento submit
+    //query(fixture, 'form').triggerEventHandler('ngSubmit', new Event('submit'));
+    //tambien podemos hacerle click al elemento nativo
+    clickElement(fixture, 'btn-submit', true);
+
+    expect(component.status).toEqual('loading');
+
+    //ejecuta tareas pendientes async
+    tick();
+    fixture.detectChanges();
+    expect(component.status).toEqual('error');
 
     expect(component.form.valid).toBeTruthy;
     expect(userServiceSpy.create).toHaveBeenCalled();
