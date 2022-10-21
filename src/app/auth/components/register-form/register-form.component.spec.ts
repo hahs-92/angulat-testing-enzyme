@@ -8,8 +8,17 @@ import {
 import { RegisterFormComponent } from './register-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UsersService } from '../../../services/user.service';
-import { query, queryById, getText, setInputValue } from '../../../../testing';
-import { mockObservable, asyncData } from '../../../../testing/async-data';
+import {
+  query,
+  queryById,
+  getText,
+  setInputValue,
+  mockObservable,
+  asyncData,
+  setCheckboxValue,
+  clickEvent,
+  clickElement,
+} from '../../../../testing';
 
 fdescribe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
@@ -158,7 +167,7 @@ fdescribe('RegisterFormComponent', () => {
     expect(userServiceSpy.create).toHaveBeenCalled();
   });
 
-  //esta envueñlta en fakeasync
+  //esta envuelta en fakeasync
   it('should send the form successfully and loading => success', fakeAsync(() => {
     const userMock = {
       name: 'Alex',
@@ -179,6 +188,53 @@ fdescribe('RegisterFormComponent', () => {
     //act
     //llamamos el evento register del componente
     component.register(new Event('submit'));
+    expect(component.status).toEqual('loading');
+
+    //ejecuta tareas pendientes async
+    tick();
+    fixture.detectChanges();
+    expect(component.status).toEqual('success');
+
+    expect(component.form.valid).toBeTruthy;
+    expect(userServiceSpy.create).toHaveBeenCalled();
+  }));
+
+  fit('should send the form successfully UI', fakeAsync(() => {
+    const userMock = {
+      name: 'Alex',
+      email: 'test@email.com',
+      password: '123456',
+      confirmPassword: '123456',
+      checkTerms: true,
+    };
+
+    component.form.patchValue(userMock);
+    //llenamos los campos del form
+    setInputValue(fixture, 'input#name', 'Alex');
+    setInputValue(fixture, 'input#email', 'test@email.com');
+    setInputValue(fixture, 'input#password', '123456');
+    setInputValue(fixture, 'input#confirmPassword', '123456');
+    setCheckboxValue(fixture, 'input#terms', true);
+
+    //miramos que el formulario si se lleno correctamente
+    //console.log(component.form.value);
+
+    //si todo sale bien el servicio nos retorna un user
+    //vamos a mirar que el servicio create, si se alla ejecutado
+    userServiceSpy.create.and.returnValue(
+      asyncData({ ...userMock, id: '1', role: 'customer' })
+    );
+
+    //act
+    //llamamos el evento register del componente
+    //component.register(new Event('submit'));
+
+    //en este caso como el button no tiene un evento (click)
+    //entonces lansamos el evento submit
+    //query(fixture, 'form').triggerEventHandler('ngSubmit', new Event('submit'));
+    //tambien podemos hacerle click al elemento nativo
+    clickElement(fixture, 'btn-submit', true);
+
     expect(component.status).toEqual('loading');
 
     //ejecuta tareas pendientes async
