@@ -21,7 +21,7 @@ import {
   asyncError,
 } from '../../../../testing';
 
-describe('RegisterFormComponent', () => {
+fdescribe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
   let fixture: ComponentFixture<RegisterFormComponent>;
   // tipamos el spy que necesita este components
@@ -48,6 +48,10 @@ describe('RegisterFormComponent', () => {
       UsersService
     ) as jasmine.SpyObj<UsersService>;
     component = fixture.componentInstance;
+    //mock para isVailableByEmail
+    userServiceSpy.isAvailableByEmail.and.returnValue(
+      mockObservable({ isAvailable: true })
+    );
     fixture.detectChanges();
   });
 
@@ -284,4 +288,23 @@ describe('RegisterFormComponent', () => {
     expect(component.form.valid).toBeTruthy;
     expect(userServiceSpy.create).toHaveBeenCalled();
   }));
+
+  //cuando el email ya no esta disponible
+  it('should show an error with email invalid', () => {
+    //arrange
+    userServiceSpy.isAvailableByEmail.and.returnValue(
+      mockObservable({ isAvailable: false })
+    );
+    setInputValue(fixture, 'input#email', 'nico@email.com');
+    //act
+    fixture.detectChanges();
+    //assert
+    expect(component.emailField?.invalid).toBeTrue();
+    expect(userServiceSpy.isAvailableByEmail).toHaveBeenCalled();
+    expect(userServiceSpy.isAvailableByEmail).toHaveBeenCalledWith(
+      'nico@email.com'
+    );
+  });
+
+  //tambien se podria validar que el mensage de error se renderize
 });
