@@ -50,6 +50,7 @@ describe('Tests for MyValidators', () => {
     });
 
     it('should return obj with the error', () => {
+      //enviamos otros campos que no sean password y confirmPassword
       const group = new FormGroup({
         otro: new FormControl('12345612'),
         otro2: new FormControl('1234564545'),
@@ -62,23 +63,23 @@ describe('Tests for MyValidators', () => {
     });
   });
 
-  // describe('Test for validateEmailAsync', () => {
-  //   it('should return null with valid email', (doneFn) => {
-  //     // Arrange
-  //     const userService: jasmine.SpyObj<UsersService> = jasmine.createSpyObj(
-  //       'UsersService',
-  //       ['isAvailableByEmail']
-  //     );
-  //     const control = new FormControl('nico@mail.com');
-  //     // Act
-  //     userService.isAvailableByEmail.and.returnValue(
-  //       mockObservable({ isAvailable: true })
-  //     );
-  //     const validator = MyValidators.validateEmailAsync(userService);
-  //     validator(control).subscribe((rta) => {
-  //       expect(rta).toBeNull();
-  //       doneFn();
-  //     });
-  //   });
-  // });
+  describe('Test for validateEmailAsync', () => {
+    it('should return null with valid email', (doneFn) => {
+      // Arrange
+      const userService: jasmine.SpyObj<UsersService> = jasmine.createSpyObj(
+        'UsersService',
+        ['isAvailableByEmail']
+      );
+      const control = new FormControl('nico@mail.com');
+      // Act
+      userService.isAvailableByEmail.and.returnValue(
+        mockObservable({ isAvailable: true })
+      );
+      const validator = MyValidators.validateEmailAsync(userService);
+      validator(control).subscribe((rta) => {
+        expect(rta).toBeNull();
+        doneFn();
+      });
+    });
+  });
 });

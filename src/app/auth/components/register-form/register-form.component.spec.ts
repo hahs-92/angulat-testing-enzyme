@@ -21,7 +21,7 @@ import {
   asyncError,
 } from '../../../../testing';
 
-fdescribe('RegisterFormComponent', () => {
+describe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
   let fixture: ComponentFixture<RegisterFormComponent>;
   // tipamos el spy que necesita este components
@@ -246,7 +246,7 @@ fdescribe('RegisterFormComponent', () => {
     expect(userServiceSpy.create).toHaveBeenCalled();
   }));
 
-  fit('should send the form UI, but with error in the server', fakeAsync(() => {
+  it('should send the form UI, but with error in the server', fakeAsync(() => {
     const userMock = {
       name: 'Alex',
       email: 'test@email.com',
